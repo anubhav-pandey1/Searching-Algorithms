@@ -21,13 +21,16 @@ int binaryLower(vector<int>& v, int n) {
     }
 }
 
-int main() {
-    vector<int> v = {4, 9, 17, 21, 25, 29, 32, 35};
+// This implementation is already duplication-compliant
+// Must add more test cases with different vectors to check
 
-    int result1 = binaryLower(v, 31);     // Test case 1
+int main() {
+    vector<int> v = {4, 9, 9, 17, 21, 25, 29, 29, 35};
+
+    int result1 = binaryLower(v, 9);       // Test case 1
     cout << result1 << endl;
 
-    int result2 = binaryLower(v, 9);     // Test case 2
+    int result2 = binaryLower(v, 35);      // Test case 2
     cout << result2 << endl;
 
     return 0;
