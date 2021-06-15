@@ -1,43 +1,57 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int findPeakElement(vector<int>& v) {   // Same logic, but uses 3 rules out of 4
-    if (v.size() < 2) {
-        return 0;
-    }
+int findPeakElement(vector<int>& v) {   // Same logic, but really concise and uses 3 rules out of 4
     int lo = 0, hi = v.size() - 1;
-    while (lo <= hi) {
+    while (lo < hi) {
         int m = lo + (hi - lo) / 2;
-        if (m > 0 && m < v.size() - 1) {
-            if (v[m] > v[m + 1] && v[m] > v[m - 1]) {
-                return m;
-            }
-            else if (v[m - 1] >= v[m]) {
-                hi = m - 1;
-            }
-            else if (v[m + 1] >= v[m]) {
-                lo = m + 1;
-            }
+        if (v[m + 1] > v[m]) {
+            lo = m + 1;
         }
-        else if (m == 0) {
-            if (v[0] > v[1]) {
-                return 0;
-            }
-            else {
-                return 1;
-            }
-        }
-        else if (m == v.size() - 1) {
-            if (v[m] > v[m - 1]) {
-                return m;
-            }
-            else {
-                return m - 1;
-            }
+        else {
+            hi = m;
         }
     }
-    return -1;
+    return lo;
 }
+
+// int findPeakElement(vector<int>& v) {   // Same logic, but uses 3 rules out of 4
+//     if (v.size() < 2) {
+//         return 0;
+//     }
+//     int lo = 0, hi = v.size() - 1;
+//     while (lo <= hi) {
+//         int m = lo + (hi - lo) / 2;
+//         if (m > 0 && m < v.size() - 1) {
+//             if (v[m] > v[m + 1] && v[m] > v[m - 1]) {
+//                 return m;
+//             }
+//             else if (v[m - 1] >= v[m]) {
+//                 hi = m - 1;
+//             }
+//             else if (v[m + 1] >= v[m]) {
+//                 lo = m + 1;
+//             }
+//         }
+//         else if (m == 0) {
+//             if (v[0] > v[1]) {
+//                 return 0;
+//             }
+//             else {
+//                 return 1;
+//             }
+//         }
+//         else if (m == v.size() - 1) {
+//             if (v[m] > v[m - 1]) {
+//                 return m;
+//             }
+//             else {
+//                 return m - 1;
+//             }
+//         }
+//     }
+//     return -1;
+// }
 
 int main() {
     ios_base::sync_with_stdio(false);
