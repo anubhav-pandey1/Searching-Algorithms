@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int findPeakElement(vector<int>& v) {
-    if (v.size() < 2) {
+int findPeakElement(vector<int>& v) { // Improve
+    if (v.size() < 2) {  // For small arrays (missed it)
         return 0;
     }
     int lo = 0, hi = v.size() - 1;
@@ -15,16 +15,18 @@ int findPeakElement(vector<int>& v) {
 
     while (lo <= hi) {
         int m = lo + (hi - lo) / 2;
-        if (v[m] > v[m + 1] && v[m] > v[m - 1] && m > 0 && m < v.size() - 1) {
-            return m;
+        if (m > 0 && m < v.size() - 1) { // Must be before else m - 1 not defined, missed
+            if (v[m] > v[m + 1] && v[m] > v[m - 1]) {
+                return m;
+            }
+            else if (v[m - 1] >= v[m + 1] && m > 0) {  // Missed equality case
+                hi = m - 1;
+            }
+            else if (v[m - 1] < v[m + 1] && m > 0) {
+                lo = m + 1;
+            }
         }
-        else if (v[m - 1] > v[m + 1] && m > 0 && m < v.size() - 1) {
-            hi = m - 1;
-        }
-        else if (v[m - 1] < v[m + 1] && m > 0 && m < v.size() - 1) {
-            lo = m + 1;
-        }
-        else if (m == 0) {
+        else if (m == 0) {        // Must be handled explicitly, missed
             return 1;
         }
         else if (m == v.size() - 1) {
@@ -63,6 +65,44 @@ int main() {
     return 0;
 }
 
+// My initial, inconcise code:-
+
+// int findPeakElement(vector<int>& v) { // Improve
+//     if (v.size() < 2) {  // For small arrays (missed it)
+//         return 0;
+//     }
+//     int lo = 0, hi = v.size() - 1;
+//     if (v[lo] > v[lo + 1]) {
+//         return lo;
+//     }
+//     if (v[hi] > v[hi - 1]) {
+//         return hi;
+//     }
+
+//     while (lo <= hi) {
+//         int m = lo + (hi - lo) / 2;
+//         if (m > 0 && m < v.size() - 1) { // Must be before else m - 1 not defined, missed
+//             if (v[m] > v[m + 1] && v[m] > v[m - 1]) {
+//                 return m;
+//             }
+//             else if (v[m - 1] >= v[m + 1] && m > 0) {  // Missed equality case
+//                 hi = m - 1;
+//             }
+//             else if (v[m - 1] < v[m + 1] && m > 0) {
+//                 lo = m + 1;
+//             }
+//         }
+//         else if (m == 0) {        // Must be handled explicitly, missed
+//             return 1;
+//         }
+//         else if (m == v.size() - 1) {
+//             return v.size() - 2;
+//         }
+//     }
+
+//     return -1;
+// }
+
 // Test cases:-
 
 // Inputs:
@@ -84,8 +124,10 @@ int main() {
 // 3 4 3 2 1
 // 5
 // 1 2 3 4 3
+// 5
+// 1 2 1 2 1
 
-// Outputs:
+// Outputs (can have other outputs too):
 
 // 2
 // 2
@@ -95,3 +137,4 @@ int main() {
 // 5
 // 1
 // 3
+// 2
