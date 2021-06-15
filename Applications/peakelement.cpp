@@ -6,31 +6,34 @@ int findPeakElement(vector<int>& v) { // Improve
         return 0;
     }
     int lo = 0, hi = v.size() - 1;
-    if (v[lo] > v[lo + 1]) {
-        return lo;
-    }
-    if (v[hi] > v[hi - 1]) {
-        return hi;
-    }
-
     while (lo <= hi) {
         int m = lo + (hi - lo) / 2;
         if (m > 0 && m < v.size() - 1) { // Must be before else m - 1 not defined, missed
             if (v[m] > v[m + 1] && v[m] > v[m - 1]) {
                 return m;
             }
-            else if (v[m - 1] >= v[m + 1] && m > 0) {  // Missed equality case
+            else if (v[m - 1] >= v[m + 1]) {  // Missed equality case
                 hi = m - 1;
             }
-            else if (v[m - 1] < v[m + 1] && m > 0) {
+            else if (v[m - 1] < v[m + 1]) {
                 lo = m + 1;
             }
         }
         else if (m == 0) {        // Must be handled explicitly, missed
-            return 1;
+            if (v[0] > v[1]) {
+                return 0;
+            }
+            else {
+                return 1;
+            }
         }
         else if (m == v.size() - 1) {
-            return v.size() - 2;
+            if (v[m] > v[m - 1]) {
+                return m;
+            }
+            else {
+                return m - 1;
+            }
         }
     }
 
@@ -137,4 +140,4 @@ int main() {
 // 5
 // 1
 // 3
-// 2
+// 1
