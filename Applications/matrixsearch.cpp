@@ -2,9 +2,26 @@
 using namespace std;
 
 // More efficient method similar to grid-search taking advantage of row-col sorted property of the matrix
+// Bottom-left and top-right elements have heterogenous neighbours ie one is smaller and other is larger
+// Top-left and bottom-right elements have homogenous neighboures ie both are smaller or larger than them
+// Elements to the left are always smaller and elements below are always larger due to the sorted property
+// Actually it's like the matrix contains two "binary search tree" and it has two "roots" correspondingly
 
 pair<int, int> searchMatrix(vector<vector<int>>& mtx, int n) {
-
+    int r = 0, c = mtx[0].size() - 1;             // Starting from the top-right corner as it is hetero.
+    while (r <= mtx.size() - 1 && c >= 0) {       // While the pointer stays in the matrix's bounds
+        int ptr = mtx[r][c];
+        if (ptr == n) {                           // Return coordinates if the pointer is the target
+            return make_pair(r, c);
+        }
+        else if (ptr > n) {                       // Else if ptr is greater than target, then move leftwards
+            c--;                                  // Since smaller elements are found leftwards
+        }
+        else if (ptr < n) {                       // Else if ptr is less than the target, then move downwards
+            r++;                                  // Since larger elements are found downwards
+        }
+    }
+    return make_pair(-1, -1);                     // If target not found by the end of the search, it's not there
 }
 
 int main() {
@@ -146,8 +163,8 @@ pair<int, int> matrixSearch(vector<vector<int>>& mtx, int n) {
     // if (mtx[rl][cl] == n)                // Why is this not needed anymore? Because we're already using
     //     return make_pair(rl, cl);        // colBinSearch and rowBinSearch if cu - cl <= ru - rl
     // else                                 // This was required when binSearch was run if cu = cl or ru = rl
-    //     return make_pair(-1, -1);
-}
+    //     return make_pair(-1, -1);        // This was required when only one row/col left after SSR but that
+}                                           // is not feasible if multiple copies of target are present in matrix
 
 
 // Test cases:-
