@@ -1,41 +1,56 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool check(const vector<int>& v, int K, int mid) {
-	vector<int> parts = {0};
-	for (int i = 0; i < v.size(); i++) {
-		int len = parts.size();
-		if (parts[len - 1] + v[i] <= mid) {
-			parts[len - 1] += v[i];
-		}
-		else {
-			parts.push_back(v[i]);
-		}
-	}
+// bool check(const vector<int>& v, int K, int mid) {
+// 	int sum = 0;
+// 	int count = 1;
+// 	for (int i = 0; i < v.size(); i++) {
+// 		if (sum + v[i] <= mid) {                  // Operations inside if () are slower
+// 			sum += v[i];
+// 		}
+// 		else {                                    // This branch can be eliminated
+// 			sum = v[i];
+// 			count++;
+// 		}
+// 		if (count > K) {
+// 			return false;
+// 		}
+// 	}
+// 	return true;
+// }
 
-	if (parts.size() <= K) {
-		return true;
+bool check(const vector<int>& v, int K, int mid) { // Branchless functions are better
+	int sum = 0;                                   // Compare with other two predicates
+	int count = 1;
+	for (int i = 0; i < v.size(); i++) {
+		sum += v[i];                               // Add to sum beforehand only
+		if (sum > mid) {                           // If sum goes higher than mid, we can reset
+			sum = v[i];                            // Reset sum
+			count++;                               // Increase count of students
+		}
+		if (count > K) {                           // Checking inside loop only if count > K
+			return false;                          // Return false as soon as count goes higher
+		}
 	}
-	else {
-		return false;
-	}
+	return true;                                   // If count does not go higher, return true
 }
 
 int allocateBooks(const vector<int>& books, int K) {
+	if (books.size() < K) {
+		return -1;
+	}
 	int lo = *max_element(books.begin(), books.end());
 	int hi = accumulate(books.begin(), books.end(), 0);
-	int prev_lo, prev_hi;
-	int result;
-	while (prev_lo != lo || prev_hi != hi) {
+	int result = -1;
+	while (lo <= hi) {
 		int mid = lo + (hi - lo) / 2;
-		prev_lo = lo, prev_hi = hi;
-		// cout << lo << " " << mid << " " << hi << endl;
+		// cout << lo << " " << mid << " " << hi << ", " << result << endl;
 		if (check(books, K, mid)) {
 			result = mid;
-			hi = mid;
+			hi = mid - 1;
 		}
 		else {
-			lo = mid;
+			lo = mid + 1;
 		}
 	}
 	return result;
@@ -69,6 +84,54 @@ int main() {
 	}
 	return 0;
 }
+
+// My initial almost-optimal approach:-
+// Need to change hi to mid - 1 and lo to mid + 1 to optimise binary search
+// No need to use prev_lo and prev_hi if we make the change given above
+// Predicate check() can be optimized by not using a vector and returing false ASAP
+
+// bool check(const vector<int>& v, int K, int mid) {
+// 	vector<int> parts = {0};
+// 	for (int i = 0; i < v.size(); i++) {
+// 		int len = parts.size();
+// 		if (parts[len - 1] + v[i] <= mid) {
+// 			parts[len - 1] += v[i];
+// 		}
+// 		else {
+// 			parts.push_back(v[i]);
+// 		}
+// 	}
+
+// 	if (parts.size() <= K) {
+// 		return true;
+// 	}
+// 	else {
+// 		return false;
+// 	}
+// }
+
+// int allocateBooks(const vector<int>& books, int K) {
+// 	if (books.size() < K) {
+// 		return -1;
+// 	}
+// 	int lo = *max_element(books.begin(), books.end());
+// 	int hi = accumulate(books.begin(), books.end(), 0);
+// 	int prev_lo, prev_hi;
+// 	int result = -1;
+// 	while (prev_lo != lo || prev_hi != hi) {
+// 		int mid = lo + (hi - lo) / 2;
+// 		prev_lo = lo, prev_hi = hi;
+// 		// cout << lo << " " << mid << " " << hi << endl;
+// 		if (check(books, K, mid)) {
+// 			result = mid;
+// 			hi = mid;
+// 		}
+// 		else {
+// 			lo = mid;
+// 		}
+// 	}
+// 	return result;
+// }
 
 // Testcases:-
 
